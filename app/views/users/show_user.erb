@@ -1,2 +1,8 @@
-<h1> Bill </h1>
-<h3> Comp "+.3" </h3>
+<h1> <%= @user.username %> </h1>
+<h3> Average Score: <%= @user.average_score %> </h3>
+<ul>
+    <% @user.ratings.each do |rating| %>
+        <li> <%= rating.score %>: <%= rating.subject.name %> <br>
+        <%= rating.review %> </li>
+    <% end %>
+</ul>
