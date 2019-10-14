@@ -41,7 +41,6 @@ class ApplicationController < Sinatra::Base
     end
 
     post '/login' do
-        # binding.pry # figure out how to authenticate on login with has_secure_password 
         user = User.find_by(username: params[:username]).authenticate(params[:password])
         if !!user
             session[:user_id] = user.id

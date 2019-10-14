@@ -7,4 +7,5 @@ end
 use Rack::MethodOverride
 use UserController
 use SubjectController
+use RatingController
 run ApplicationController
