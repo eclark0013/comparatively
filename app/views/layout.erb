@@ -6,6 +6,9 @@
   </head>
 
   <body style="background-image: linear-gradient(to right, white, #46e2b3);">
+    <% if logged_in? %>
+    <a style="float: right;" href="/logout">Log out</a><br>
+    <% end %> 
     <h1 style="text-align: center;"> comparatively. </h1>
     <%= yield %>
   </body>
