@@ -44,16 +44,15 @@ class ApplicationController < Sinatra::Base
     else
         erb :'/users/login'
     end
-    binding.pry # figure out how to authenticate on login with has_secure_password 
   end
 
   post '/login' do
+    # binding.pry # figure out how to authenticate on login with has_secure_password 
     params
-    user = User.new(username: params[:username]), password: '', password_confirmation: 'nomatch')
     user = User.find_by(username: params[:username]).authenticate(params[:password])
     if !!user
       session[:user_id] = user.id
-      redirect "/users/#{@user.id}"
+      redirect "/users/#{user.id}"
     else
       redirect '/login'
     end

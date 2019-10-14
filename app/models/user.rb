@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-    # attr_accessor :total, :average_score (could make it so that it doesn't calculate too often)
+    # attr_accessor :average_score (could make it so that it doesn't calculate too often)
     
     has_secure_password  
     has_many :ratings

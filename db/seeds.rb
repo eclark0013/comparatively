@@ -1,35 +1,38 @@
+DatabaseCleaner.strategy = :truncation
+DatabaseCleaner.clean
+
 Category.new(name: "Book")
 users_list = {
     "Tori" => {
         :username => "tori",
-        :password_digest => "toripassword"
+        :password => "toripassword"
     },
     "Joey" => {
         :username => "joey",
-        :password_digest => "joeypassword"
+        :password => "joeypassword"
     },
     "Eric" => {
         :username => "eric",
-        :password_digest => "ericpassword"
+        :password => "ericpassword"
     },
     "Sheehan" => {
         :username => "sheehan",
-        :password_digest => "sheehanpassword"
+        :password => "sheehanpassword"
     },
     "Izzy" => {
         :username => "izzy",
-        :password_digest => "izzypassword"
+        :password => "izzypassword"
     },
     "Robin" => {
         :username => "robin",
-        :password_digest => "robinpassword"
+        :password => "robinpassword"
     }
   }
 
 users_list.each do |name, info_hash|
   u = User.new
   info_hash.each do |attribute, value|
-      u[attribute] = value
+      u.send "#{attribute}=", value
   end
   u.save
 end
@@ -69,145 +72,145 @@ ratings = {
     "1a" => {
         :score => 3,
         :review => "Meh",
-        :user_id => 1,
+        :user_id => User.find_by(username: User.all[0].username).id,
         :subject_id => 1
     },
     "1b" => {
         :score => 2,
         :review => "awful",
-        :user_id => 1,
+        :user_id => User.find_by(username: User.all[0].username).id,
         :subject_id => 2
     },
     "1c" => {
         :score => 1,
         :review => "terrible",
-        :user_id => 1,
+        :user_id => User.find_by(username: User.all[0].username).id,
         :subject_id => 3
     },
     "1d" => {
         :score => 1,
         :review => "so very bad",
-        :user_id => 1,
+        :user_id => User.find_by(username: User.all[0].username).id,
         :subject_id => 4
     },
     "2a" => {
         :score => 3,
         :review => "Whatever",
-        :user_id => 2,
+        :user_id => User.find_by(username: User.all[1].username).id,
         :subject_id => 2
     },
     "2b" => {
         :score => 5,
         :review => "wow",
-        :user_id => 2,
+        :user_id => User.find_by(username: User.all[1].username).id,
         :subject_id => 5
     },
     "2c" => {
         :score => 4,
         :review => "quite good",
-        :user_id => 2,
+        :user_id => User.find_by(username: User.all[1].username).id,
         :subject_id => 4
     },
     "2d" => {
         :score => 5,
         :review => "amazing",
-        :user_id => 2,
+        :user_id => User.find_by(username: User.all[1].username).id,
         :subject_id => 1
     },
     "3a" => {
         :score => 1,
         :review => "crappy as they all are",
-        :user_id => 3,
+        :user_id => User.find_by(username: User.all[2].username).id,
         :subject_id => 1
     },
     "3b" => {
         :score => 1,
         :review => "crappy as usual",
-        :user_id => 3,
+        :user_id => User.find_by(username: User.all[2].username).id,
         :subject_id => 4
     },
     "3c" => {
         :score => 1,
         :review => "crappy as always",
-        :user_id => 3,
+        :user_id => User.find_by(username: User.all[2].username).id,
         :subject_id => 5
     },
     "3d" => {
         :score => 4,
         :review => "suprisingly decent",
-        :user_id => 3,
+        :user_id => User.find_by(username: User.all[2].username).id,
         :subject_id => 2
     },
     "4a" => {
         :score => 3,
         :review => "okay",
-        :user_id => 4,
+        :user_id => User.find_by(username: User.all[3].username).id,
         :subject_id => 2
     },
     "4b" => {
         :score => 3,
         :review => "alright",
-        :user_id => 4,
+        :user_id => User.find_by(username: User.all[3].username).id,
         :subject_id => 3
     },
     "4c" => {
         :score => 5,
         :review => "very nice",
-        :user_id => 4,
+        :user_id => User.find_by(username: User.all[3].username).id,
         :subject_id => 4
     },
     "4d" => {
         :score => 2,
         :review => "underwhelming",
-        :user_id => 4,
+        :user_id => User.find_by(username: User.all[3].username).id,
         :subject_id => 5
     },
     "5a" => {
         :score => 5,
         :review => "no thanks",
-        :user_id => 5,
+        :user_id => User.find_by(username: User.all[4].username).id,
         :subject_id => 2
     },
     "5b" => {
         :score => 4,
         :review => "okay i get it",
-        :user_id => 5,
+        :user_id => User.find_by(username: User.all[4].username).id,
         :subject_id => 3
     },
     "5c" => {
         :score => 1,
         :review => "bleh",
-        :user_id => 5,
+        :user_id => User.find_by(username: User.all[4].username).id,
         :subject_id => 4
     },
     "5d" => {
         :score => 1,
         :review => "ugh",
-        :user_id => 5,
+        :user_id => User.find_by(username: User.all[4].username).id,
         :subject_id => 1
     },
     "6a" => {
         :score => 3,
         :review => "the usual",
-        :user_id => 6,
+        :user_id => User.find_by(username: User.all[5].username).id,
         :subject_id => 5
     },
     "6b" => {
         :score => 3,
         :review => "as good as can be expected",
-        :user_id => 6,
+        :user_id => User.find_by(username: User.all[5].username).id,
         :subject_id => 3
     },
     "6c" => {
         :score => 3,
         :review => "okayyy",
-        :user_id => 6,
+        :user_id => User.find_by(username: User.all[5].username).id,
         :subject_id => 4
     },
     "6d" => {
         :score => 1,
         :review => "just so bad",
-        :user_id => 6,
+        :user_id => User.find_by(username: User.all[5].username).id,
         :subject_id => 1
     }
   }
