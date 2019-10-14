@@ -30,10 +30,8 @@ class ApplicationController < Sinatra::Base
 
   get '/users/:id' do
     @user = User.find(params[:id])
-    # erb :user page with their average score and all their ratings
-    # and a link to make a new rating
-    # and a link to see all subjects
-    binding.pry
+    # add a link to make a new rating
+    # add a link to see all subjects
     erb :'/users/show_user'
   end
 
@@ -56,6 +54,12 @@ class ApplicationController < Sinatra::Base
     else
       redirect '/login'
     end
+  end
+
+  get '/subjects/:id' do
+    @subject = Subject.find(params[:id])
+    # add a link to make a new rating (or edit your rating if you have already rated this)
+    erb :'/subjects/show_subject'
   end
 
   helpers do
