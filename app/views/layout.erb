@@ -7,7 +7,9 @@
 
   <body style="background-image: linear-gradient(to right, white, #46e2b3);">
     <% if logged_in? %>
-    <p>Logged in as <a href="/users/<%= current_user.id %>"><%= current_user.username %> <a style="float: right;" href="/logout">Log out</a></p> <br>
+      <p>Logged in as <a href="/users/<%= current_user.id %>"><%= current_user.username %> 
+      <a style="float: right;" href="/logout">Log out</a></p>
+      <a href="/ratings/new">Make a new rating</a>
     <% end %> 
     <h1 style="text-align: center;"> comparatively. </h1>
     <%= yield %>
