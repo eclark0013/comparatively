@@ -9,12 +9,15 @@ class ApplicationController < Sinatra::Base
         set :session_secret, "secret"
     end
 
-    get '/session' do
-        session
-    end
 
     get '/' do
-        erb :'/login'
+        if !logged_in?
+            erb :'/login'
+        else
+            @subjects = Subject.all
+            @users = User.all
+            erb :'/index'
+        end
     end
 
     get '/signup' do
@@ -26,9 +29,13 @@ class ApplicationController < Sinatra::Base
     end
 
     post '/signup' do
-        #create functionality to not allow two users to have the same username
-        @user = User.create(params)
-        redirect "/users/#{@user.id}"
+        if !!User.find_by(username: params[:username])
+            redirect '/signup' # create functionality to write in an error message?
+        else
+            @user = User.create(params)
+            session[:user_id] = @user.id
+            redirect "/users/#{@user.id}"
+        end
     end
 
     get '/login' do
@@ -41,10 +48,10 @@ class ApplicationController < Sinatra::Base
     end
 
     post '/login' do
-        user = User.find_by(username: params[:username]).authenticate(params[:password])
-        if !!user
-            session[:user_id] = user.id
-            redirect "/users/#{user.id}"
+        @user = User.find_by(username: params[:username]).authenticate(params[:password])
+        if !!@user
+            session[:user_id] = @user.id
+            redirect "/users/#{@user.id}"
         else
             redirect '/login'
         end
@@ -53,13 +60,6 @@ class ApplicationController < Sinatra::Base
     get '/logout' do
         session[:user_id] = nil
         redirect :'/login'
-    end
-
-    get '/users/:id' do
-        @user = User.find(params[:id])
-        # add a link to make a new rating
-        # add a link to see all subjects
-        erb :'/users/show_user'
     end
 
     helpers do
