@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
     
 
     def average_score # an average of all scores given by that user
-        self.ratings.average(:score)
+        self.ratings.average(:score).round(2)
     end
 
 end

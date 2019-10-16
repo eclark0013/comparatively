@@ -16,7 +16,7 @@ class Subject < ActiveRecord::Base
         differences.each do |difference|
             sum += difference
         end
-        (sum.to_f/ratings.size).round(3)
+        (sum.to_f/ratings.size).round(2)
     end
 
 end
