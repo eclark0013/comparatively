@@ -12,7 +12,7 @@ class ApplicationController < Sinatra::Base
 
     get '/' do
         if !logged_in?
-            erb :'/login'
+            erb :'/users/login'
         else
             @subjects = Subject.all
             @users = User.all
@@ -71,7 +71,7 @@ class ApplicationController < Sinatra::Base
 
     get '/logout' do
         session[:user_id] = nil
-        redirect :'/login'
+        redirect '/login'
     end
 
     helpers do
