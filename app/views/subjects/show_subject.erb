@@ -1,0 +1,14 @@
+<h1 style="text-align: center;"> <%= @subject.name %> </h1>
+<h2 style="text-align: center;"> Comparatively: <%= @subject.comp_score %> </h2>
+
+<a href="/subjects/<%= @subject.id %>/ratings/new"> Edit or Make New Rating for <%= @subject.name %></a>
+
+<h2> Ratings </h2>
+<ul>
+    <% @subject.ratings.each do |rating| %>
+        <li> Score given: <%= rating.score %> (compared to <%= rating.user.average_score %> average) <br>
+        <%= rating.user.username %> says: <%= rating.review %> </li><br>
+        
+        </li> 
+    <% end %>
+</ul>

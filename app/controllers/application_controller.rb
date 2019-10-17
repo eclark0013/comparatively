@@ -62,7 +62,7 @@ class ApplicationController < Sinatra::Base
         redirect :'/login'
     end
 
-    helpers do
+    general_helpers do
         def logged_in?
             !!session[:user_id]
         end

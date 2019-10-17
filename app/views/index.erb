@@ -1,0 +1,11 @@
+<h2> All Subjects: </h2>
+<p>subject (comp score)</p>
+<% @subjects.each do |subject| %>
+    <li><a href="/subjects/<%= subject.id %>"><%= subject.name %></a> (<%= subject.comp_score %>)<br>
+<% end %><br>
+
+<h2> All Users: </h2>
+<p>user (average score)</p>
+<% @users.each do |user| %>
+    <li><a href="/users/<%= user.id %>"><%= user.username %></a> (<%= user.average_score %>)<br>
+<% end %>

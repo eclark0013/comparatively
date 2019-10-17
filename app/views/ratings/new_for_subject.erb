@@ -1,0 +1,8 @@
+<h1> New Rating for <%= @subject.name %> </h1>
+<form action="/subjects/<%= @subject.id %>/ratings" method='POST'>
+    <% [5, 4, 3, 2, 1].each do |option| %>
+        <input type="radio" name="score" id="score" value="<%= option %>"> <%= option %> </input> <br>
+    <% end %> <br>
+    <label for='review'>Review: </label><br><textarea name="review" rows="10" cols="50"></textarea>
+    <input type='submit' id='create' value="Rate">
+</form>

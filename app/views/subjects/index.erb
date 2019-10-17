@@ -1,0 +1,4 @@
+<h2> All subjects: </h2>
+<% @subjects.each do |subject| %>
+    <li><a href="/subjects/<%= subject.id %>"><%= subject.name %></a> (<%= subject.comp_score %>)<br>
+<% end %>
