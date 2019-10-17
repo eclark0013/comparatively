@@ -62,7 +62,7 @@ class ApplicationController < Sinatra::Base
         redirect :'/login'
     end
 
-    general_helpers do
+    helpers do
         def logged_in?
             !!session[:user_id]
         end
@@ -70,6 +70,24 @@ class ApplicationController < Sinatra::Base
         def current_user
             User.find(session[:user_id])
         end
+
+        def new_rating_for(subject_id)
+            @rating = Rating.new
+            @rating.score = params[:rating][:score].to_i if params[:rating][:score] != nil
+            @rating.review = params[:rating][:review]
+            @rating.user_id = current_user.id
+            @rating.subject_id = subject_id
+            @rating.save
+            @message = @rating.errors.messages
+        end
+
+        def edit_rating_for(subject_id)
+            @rating = Rating.find_by(subject_id: subject_id, user_id: current_user.id)
+            @rating.score = params[:rating][:score].to_i if params[:rating][:score] != nil
+            @rating.review = params[:rating][:review]
+            @rating.save
+        end
+        
     end
 
 

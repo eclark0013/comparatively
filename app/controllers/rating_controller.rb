@@ -5,11 +5,10 @@ class RatingController < ApplicationController
     get '/subjects/:id/ratings/new' do
         if !logged_in?
             erb :'/login' 
-            # rendering in order to save @subject so that we go to it after login
-            # need to make that functional though...
+                # make a method that renders login and then redirects back to original desired path
         end
         @subject = Subject.find(params[:id])
-        if current_user.subjects.find(@subject.id) # checks if current user has already rated this subject...
+        if current_user.rated_subject(@subject.id) # checks if current user has already rated this subject...
             redirect "/subjects/#{@subject.id}/ratings/edit" # ... and if they have, it redirects to edit page 
         else
             erb :'/ratings/new_for_subject' # ... otherwise they can make a new rating for that subject
@@ -17,30 +16,27 @@ class RatingController < ApplicationController
     end
 
     post '/subjects/:id/ratings' do
-        @rating = Rating.new
-        @rating.score = params[:rating][:score].to_i if params[:rating][:score] != nil
-        @rating.review = params[:review]
-        @rating.user_id = current_user.id
-        @rating.subject_id = params[:id]
-        @rating.save
-        @message = @rating.errors.messages
-        binding.pry
+        new_rating_for(params[:id])
         redirect "/subjects/#{params[:id]}"
     end
 
     get '/subjects/:id/ratings/edit' do
+        if !logged_in?
+            erb :'/login' 
+            # make a method that renders login and then redirects back to original desired path
+        end
         @subject = Subject.find(params[:id])
         @user = current_user
-        if !@user.subjects.find(@subject.id)
-            redirect "/subjects/#{@subject.id}/ratings/new"
+        if current_user.rated_subject(@subject.id) # checks if current user has already rated this subject...
+            @rating = Rating.find_by(subject_id: @subject.id, user_id: current_user.id)
+            erb :'/ratings/edit' # ... and if they have, it opens the edit page 
         else
-            @rating = @user.ratings.find_by(subject_id: @subject.id)
-            erb :'/ratings/edit'
+            redirect "/subjects/#{@subject.id}/ratings/edit" # ... otherwise redirects to a new rating for that subject
         end
     end
 
     patch '/subjects/:id/ratings' do
-        edit_rating
+        edit_rating_for(params[:id])
         redirect "/subjects/#{params[:id]}"
     end
 
@@ -60,18 +56,17 @@ class RatingController < ApplicationController
         @subject = Subject.find_by(name: params[:rating][:subject_name])
         # If new subject input and radio selected, radio selection will override input
         if !!@subject # if the subject already exists
-            @rating = Rating.find_by(subject_id: @subject.id, user_id: current_user.id)
-            if !!@rating # if subject exists and you have rated it (edits)
-                edit_rating
+            if current_user.rated_subject(@subject.id) # if subject exists and you have rated it (edits)
+                edit_rating_for(@subject.id)
                 binding.pry                    
             else # if subject exists and you have not rated it (new rating for existing subject)
-                new_rating
+                new_rating_for(@subject.id)
                 binding.pry
             end  
         else # subject does not yet exist, therefore must be write-in
             @subject = Subject.new(name: params[:rating][:subject_name], category_id: 1)
             @subject.save
-            new_rating
+            new_rating_for(@subject.id)
             binding.pry
         end
         redirect "/subjects/#{@subject.id}"
@@ -83,25 +78,6 @@ class RatingController < ApplicationController
             @rating.delete
         end 
         redirect "/users/#{current_user.id}"
-    end
-
-    rating_helpers do
-        def new_rating
-            @rating = Rating.new
-            @rating.score = params[:rating][:score].to_i if params[:rating][:score] != nil
-            @rating.review = params[:review]
-            @rating.user_id = current_user.id
-            @rating.subject_id = params[:id]
-            @rating.save
-            @message = @rating.errors.messages
-        end
-
-        def edit_rating
-            @rating = Rating.find_by(subject_id: params[:id], user_id: current_user.id)
-            @rating.score = params[:rating][:score].to_i if params[:rating][:score] != nil
-            @rating.review = params[:rating][:review]
-            @rating.save
-        end
     end
 
 end

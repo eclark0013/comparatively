@@ -10,5 +10,15 @@ class User < ActiveRecord::Base
         (self.ratings.average(:score)).round(2)
     end
 
+    def rated_subject(id)
+        begin
+            self.subjects.find(id)
+        rescue
+            false
+        else
+            true
+        end
+    end
+
 end
   
