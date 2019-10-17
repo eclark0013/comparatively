@@ -5,12 +5,12 @@
     <% @user.ratings.each do |rating| %>
         <% subject = rating.subject %>
         <li> Subject: <a href="/subjects/<%= subject.id %>"><%= subject.name %></a> (<%= subject.comp_score %>)<br>
-        Comp Score: <%= rating.score %> <br>
+        Score: <%= rating.score %> <br>
         Review: <%= rating.review %> </li>
         <a href="/subjects/<%= subject.id %>/ratings/edit">Edit Rating</a> <br>
         <form method="POST" action="/subjects/<%= subject.id %>/ratings/delete">
             <input id="hidden" type="hidden" name="_method" value="DELETE">
-            <input type='submit' value="delete">
+            <input type='submit' value="Delete Rating">
         </form>
         <br>
     <% end %>

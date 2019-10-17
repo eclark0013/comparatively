@@ -75,6 +75,7 @@ class RatingController < ApplicationController
         if !!@rating # in case user tried to go to direct url for delete rating for a subject they haven't rated
             @rating.delete
         end 
+        current_user.update_average_score
         redirect "/users/#{current_user.id}"
     end
 

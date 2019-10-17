@@ -90,6 +90,7 @@ class ApplicationController < Sinatra::Base
             @rating.user_id = current_user.id
             @rating.subject_id = subject_id
             @rating.save
+            current_user.update_average_score
             @message = @rating.errors.messages
         end
 
@@ -98,6 +99,8 @@ class ApplicationController < Sinatra::Base
             @rating.score = params[:rating][:score].to_i if params[:rating][:score] != nil
             @rating.review = params[:rating][:review]
             @rating.save
+            current_user.update_average_score
+            @message = @rating.errors.messages
         end
         
     end

@@ -5,7 +5,7 @@
     <% @user.ratings.each do |rating| %>
         <% subject = rating.subject %>
         <li> Subject: <a href="/subjects/<%= subject.id %>"><%= subject.name %></a> (<%= subject.comp_score %>)<br>
-        Comp Score: <%= rating.score %> <br>
+        Score: <%= rating.score %> <br>
         Review: <%= rating.review %> </li><br>
     <% end %>
 </ul>

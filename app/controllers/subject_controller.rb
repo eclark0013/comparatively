@@ -8,7 +8,6 @@ class SubjectController < ApplicationController
     end
     
     get '/subjects/:id' do
-        binding.pry
         @subject = Subject.find(params[:id])
         # add a link to make a new rating (or edit your rating if you have already rated this)
         erb :'/subjects/show_subject'
