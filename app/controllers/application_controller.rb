@@ -34,7 +34,13 @@ class ApplicationController < Sinatra::Base
         else
             @user = User.create(params)
             session[:user_id] = @user.id
-            redirect "/users/#{@user.id}"
+            if !!(session[:route]) #coming from an attempt to access another route
+                @route = session[:route]
+                session[:route] = nil
+                redirect "#{@route}"
+            else
+                redirect "/users/#{@user.id}"
+            end
         end
     end
 
@@ -51,7 +57,13 @@ class ApplicationController < Sinatra::Base
         @user = User.find_by(username: params[:username]).authenticate(params[:password])
         if !!@user
             session[:user_id] = @user.id
-            redirect "/users/#{@user.id}"
+            if !!(session[:route]) #coming from an attempt to access another route
+                @route = session[:route]
+                session[:route] = nil
+                redirect "#{@route}"
+            else
+                redirect "/users/#{@user.id}"
+            end
         else
             redirect '/login'
         end

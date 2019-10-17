@@ -4,14 +4,15 @@ class RatingController < ApplicationController
 
     get '/subjects/:id/ratings/new' do
         if !logged_in?
-            erb :'/login' 
-                # make a method that renders login and then redirects back to original desired path
-        end
-        @subject = Subject.find(params[:id])
-        if current_user.rated_subject(@subject.id) # checks if current user has already rated this subject...
-            redirect "/subjects/#{@subject.id}/ratings/edit" # ... and if they have, it redirects to edit page 
+            session[:route] = "/subjects/#{params[:id]}/ratings/new"
+            erb :'/users/login' 
         else
-            erb :'/ratings/new_for_subject' # ... otherwise they can make a new rating for that subject
+            @subject = Subject.find(params[:id])
+            if current_user.rated_subject(@subject.id) # checks if current user has already rated this subject...
+                redirect "/subjects/#{@subject.id}/ratings/edit" # ... and if they have, it redirects to edit page 
+            else
+                erb :'/ratings/new_for_subject' # ... otherwise they can make a new rating for that subject
+            end
         end
     end
 
@@ -22,17 +23,18 @@ class RatingController < ApplicationController
 
     get '/subjects/:id/ratings/edit' do
         if !logged_in?
-            erb :'/login' 
-            # make a method that renders login and then redirects back to original desired path
-        end
-        @subject = Subject.find(params[:id])
-        @user = current_user
-        if current_user.rated_subject(@subject.id) # checks if current user has already rated this subject...
-            @rating = Rating.find_by(subject_id: @subject.id, user_id: current_user.id)
-            erb :'/ratings/edit' # ... and if they have, it opens the edit page 
+            session[:route] = "/subjects/#{params[:id]}/ratings/edit"
+            erb :'/users/login'
         else
-            redirect "/subjects/#{@subject.id}/ratings/edit" # ... otherwise redirects to a new rating for that subject
-        end
+            @subject = Subject.find(params[:id])
+            @user = current_user
+            if current_user.rated_subject(@subject.id)
+                @rating = Rating.find_by(subject_id: @subject.id, user_id: current_user.id)
+                erb :'/ratings/edit' 
+            else
+                redirect "/subjects/#{@subject.id}/ratings/new" 
+            end 
+        end  
     end
 
     patch '/subjects/:id/ratings' do
@@ -42,12 +44,11 @@ class RatingController < ApplicationController
 
 
     get '/ratings/new' do
-        @subjects = Subject.all - current_user.subjects
         if !logged_in?
-            erb :'/login' 
-            # rendering in order to save @subject so that we go to it after login
-            # need to make that functional though...
+            session[:route] = "/ratings/new"
+            erb :'/users/login' 
         else
+            @subjects = Subject.all - current_user.subjects
             erb :'/ratings/new'
         end
     end
@@ -56,18 +57,15 @@ class RatingController < ApplicationController
         @subject = Subject.find_by(name: params[:rating][:subject_name])
         # If new subject input and radio selected, radio selection will override input
         if !!@subject # if the subject already exists
-            if current_user.rated_subject(@subject.id) # if subject exists and you have rated it (edits)
+            if current_user.rated_subject(@subject.id)
                 edit_rating_for(@subject.id)
-                binding.pry                    
-            else # if subject exists and you have not rated it (new rating for existing subject)
+            else 
                 new_rating_for(@subject.id)
-                binding.pry
             end  
-        else # subject does not yet exist, therefore must be write-in
+        else # if subject does not yet exist (write-in case)
             @subject = Subject.new(name: params[:rating][:subject_name], category_id: 1)
             @subject.save
             new_rating_for(@subject.id)
-            binding.pry
         end
         redirect "/subjects/#{@subject.id}"
     end
