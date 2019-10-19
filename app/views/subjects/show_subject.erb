@@ -6,8 +6,9 @@
 <h2> Ratings </h2>
 <ul>
     <% @subject.ratings.each do |rating| %>
-        <li> Score given: <%= rating.score %> (compared to <%= rating.user.average_score %> average) <br>
-        <%= rating.user.username %> says: <%= rating.review %> </li><br>
+        <li> Rating from <%= rating.user.username %><br>
+        Score: <%= rating.score %> (compared to <%= rating.user.average_score %> average) <br>
+        Review: <%= rating.review %> </li><br>
         </li> 
     <% end %>
 </ul>

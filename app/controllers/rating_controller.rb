@@ -49,6 +49,7 @@ class RatingController < ApplicationController
             erb :'/users/login' 
         else
             @subjects = Subject.all - current_user.subjects
+            @error_messages = session[:errors]
             erb :'/ratings/new'
         end
     end
@@ -59,8 +60,16 @@ class RatingController < ApplicationController
         if !!@subject # if the subject already exists
             if current_user.rated_subject(@subject.id)
                 edit_rating_for(@subject.id)
+                if @rating.errors.messages.any?
+                    session[:errors] = @rating.errors.messages
+                    redirect '/ratings/new' 
+                end
             else 
                 new_rating_for(@subject.id)
+                if @rating.errors.messages.any?
+                    session[:errors] = @rating.errors.messages
+                    redirect '/ratings/new' 
+                end     
             end  
         else # if subject does not yet exist (write-in case)
             @subject = Subject.new(name: params[:rating][:subject_name], category_id: 1)

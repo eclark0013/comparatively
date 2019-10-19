@@ -91,7 +91,7 @@ class ApplicationController < Sinatra::Base
             @rating.subject_id = subject_id
             @rating.save
             current_user.update_average_score
-            @message = @rating.errors.messages
+            session[:errors] = @rating.errors.messages
         end
 
         def edit_rating_for(subject_id)
@@ -100,7 +100,7 @@ class ApplicationController < Sinatra::Base
             @rating.review = params[:rating][:review]
             @rating.save
             current_user.update_average_score
-            @message = @rating.errors.messages
+            session[:errors] = @rating.errors.messages
         end
         
     end
