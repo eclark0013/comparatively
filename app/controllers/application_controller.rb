@@ -30,13 +30,13 @@ class ApplicationController < Sinatra::Base
 
     post '/signup' do
         if !!User.find_by(username: params[:username])
-            redirect '/signup' # create functionality to write in an error message?
+            redirect '/signup' # protects against duplicate usernames; create functionality to write in an error message?
         else
             @user = User.create(params)
             session[:user_id] = @user.id
             if !!(session[:route]) #coming from an attempt to access another route
                 @route = session[:route]
-                session[:route] = nil
+                session.delete("route")
                 redirect "#{@route}"
             else
                 redirect "/users/#{@user.id}"
@@ -54,12 +54,12 @@ class ApplicationController < Sinatra::Base
     end
 
     post '/login' do
-        @user = User.find_by(username: params[:username]).authenticate(params[:password])
-        if !!@user
+        @user = User.find_by(username: params[:username])
+        if !!@user && !!@user.authenticate(params[:password])
             session[:user_id] = @user.id
             if !!(session[:route]) #coming from an attempt to access another route
                 @route = session[:route]
-                session[:route] = nil
+                session.delete("route")
                 redirect "#{@route}"
             else
                 redirect "/users/#{@user.id}"
@@ -95,7 +95,7 @@ class ApplicationController < Sinatra::Base
         end
 
         def edit_rating_for(subject_id)
-            @rating = Rating.find_by(subject_id: subject_id, user_id: current_user.id)
+            @rating = Rating.find_by(subject_id: subject_id, user_id: current_user.id) # uses current_user method to protect data
             @rating.score = params[:rating][:score].to_i if params[:rating][:score] != nil
             @rating.review = params[:rating][:review]
             @rating.save

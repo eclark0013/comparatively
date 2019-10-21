@@ -74,13 +74,18 @@ class RatingController < ApplicationController
         else # if subject does not yet exist (write-in case)
             @subject = Subject.new(name: params[:rating][:subject_name], category_id: 1)
             @subject.save
+            binding.pry
+            if @subject.errors.messages.any?
+                session[:errors] = @subject.errors.messages
+                redirect '/ratings/new' 
+            end
             new_rating_for(@subject.id)
         end
         redirect "/subjects/#{@subject.id}"
     end
 
     delete "/subjects/:id/ratings/delete" do
-        @rating = Rating.find_by(subject_id: params[:id], user_id: current_user.id)
+        @rating = Rating.find_by(subject_id: params[:id], user_id: current_user.id) # uses current_user method to protect data 
         if !!@rating # in case user tried to go to direct url for delete rating for a subject they haven't rated
             @rating.delete
         end 

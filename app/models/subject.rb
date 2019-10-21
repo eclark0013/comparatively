@@ -2,6 +2,7 @@ class Subject < ActiveRecord::Base
     belongs_to :category
     has_many :ratings
     has_many :users, through: :ratings
+    validates :name, presence: true
 
     def raw_score # a raw average of all scores for the subject
         self.ratings.average(:score)
