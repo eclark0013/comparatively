@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
     has_secure_password  
     has_many :ratings
     has_many :subjects, through: :ratings
+    validates :username, presence: true
     validates :username, uniqueness: true
 
     def average_score

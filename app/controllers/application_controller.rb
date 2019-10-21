@@ -31,11 +31,10 @@ class ApplicationController < Sinatra::Base
 
     post '/signup' do
         @user = User.create(params)
-        if @user.errors.messages.any?
+        if @user.errors.messages.any? # redirect for duplicate usernames, no password
             flash[:errors] = @user.errors.messages
-            redirect '/signup' # protects against duplicate usernames; create functionality to write in an error message?
+            redirect '/signup' 
         else
-            @user = User.create(params)
             session[:user_id] = @user.id
             if !!(session[:route]) #coming from an attempt to access another route
                 @route = session[:route]

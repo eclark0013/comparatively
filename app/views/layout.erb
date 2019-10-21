@@ -15,9 +15,9 @@
     <a href="/subjects">All subjects</a>
     <h1 style="text-align: center;"> comparatively. </h1>
     <% if flash[:errors] %>
-      <p style="color: red;"> Error: 
+      <p style="color: red;"> Error: <br>
         <% flash[:errors].each do |key, value| %>
-          <%= "#{key.capitalize} #{value.first}." %>
+          <%= "#{key.capitalize} #{value.first}." %><br>
         <% end %> 
       </p>
     <% end %> 

@@ -18,6 +18,9 @@ class RatingController < ApplicationController
 
     post '/subjects/:id/ratings' do
         new_rating_for(params[:id])
+        if @rating.errors.messages.any?
+            redirect "/subjects/#{params[:id]}/ratings/new"
+        end
         redirect "/subjects/#{params[:id]}"
     end
 
