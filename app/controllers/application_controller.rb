@@ -6,6 +6,7 @@ class ApplicationController < Sinatra::Base
         set :public_folder, 'public'
         set :views, 'app/views'
         enable :sessions
+        register Sinatra::Flash
         set :session_secret, "secret"
     end
 
@@ -29,7 +30,9 @@ class ApplicationController < Sinatra::Base
     end
 
     post '/signup' do
-        if !!User.find_by(username: params[:username])
+        @user = User.create(params)
+        if @user.errors.messages.any?
+            flash[:errors] = @user.errors.messages
             redirect '/signup' # protects against duplicate usernames; create functionality to write in an error message?
         else
             @user = User.create(params)
@@ -65,6 +68,7 @@ class ApplicationController < Sinatra::Base
                 redirect "/users/#{@user.id}"
             end
         else
+            flash[:errors] = {:password => ["is incorrect"]}
             redirect '/login'
         end
     end
@@ -91,7 +95,7 @@ class ApplicationController < Sinatra::Base
             @rating.subject_id = subject_id
             @rating.save
             current_user.update_average_score
-            session[:errors] = @rating.errors.messages
+            flash[:errors] = @rating.errors.messages
         end
 
         def edit_rating_for(subject_id)
@@ -100,7 +104,7 @@ class ApplicationController < Sinatra::Base
             @rating.review = params[:rating][:review]
             @rating.save
             current_user.update_average_score
-            session[:errors] = @rating.errors.messages
+            flash[:errors] = @rating.errors.messages
         end
         
     end

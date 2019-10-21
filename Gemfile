@@ -12,3 +12,4 @@ gem 'pry'
 gem 'bcrypt'
 gem "tux"
 gem 'database_cleaner', '~> 1.5', '>= 1.5.3'
+gem "sinatra-flash"
