@@ -99,6 +99,10 @@ class ApplicationController < Sinatra::Base
 
         def edit_rating_for(subject_id)
             @rating = Rating.find_by(subject_id: subject_id, user_id: current_user.id) # uses current_user method to protect data
+            if !@rating
+                flash[:errors] = {:rating => ["can only be edited by owner"]}
+                redirect "/"
+            end 
             @rating.score = params[:rating][:score].to_i if params[:rating][:score] != nil
             @rating.review = params[:rating][:review]
             @rating.save
