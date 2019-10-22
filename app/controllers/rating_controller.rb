@@ -56,6 +56,22 @@ class RatingController < ApplicationController
         end
     end
 
+    get '/ratings/subjects/:subject_id/users/:user_id' do
+        @subject = Subject.find(params[:subject_id])
+        @user = User.find(params[:user_id])
+        if !!@subject && !!@user
+            @rating = Rating.find_by(subject_id: @subject.id, user_id: @user.id)
+            if @user == current_user
+                erb :"/ratings/index_self"
+            else
+                erb :"/ratings/index"
+            end
+        else
+            flash[:errors] = {:rating => ["does not exist for that subject and user"]}
+            redirect "/"
+        end
+    end
+
     post '/ratings' do
         @subject = Subject.find_by(name: params[:rating][:subject_name])
         # If new subject input and radio selected, radio selection will override input

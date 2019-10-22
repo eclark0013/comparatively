@@ -1,0 +1,11 @@
+<h2>Rating for <a href="/subjects/<%= @subject.id %>"><%= @subject.name %></a></h2>
+<h3>from <%= @user.username %> </h3>
+<p>
+    Score: <%= @rating.score %> <br>
+    Review: <%= @rating.review %> <br><br>
+    <a href="/subjects/<%= @subject.id %>/ratings/edit">Edit Rating</a>
+    <form method="POST" action="/subjects/<%= @subject.id %>/ratings/delete">
+        <input id="hidden" type="hidden" name="_method" value="DELETE">
+        <input type='submit' value="Delete Rating">
+    </form>
+</p>
