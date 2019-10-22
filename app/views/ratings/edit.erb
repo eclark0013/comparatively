@@ -1,10 +1,14 @@
-<h1> Edit Rating for <%= @subject.name %>: </h1>
+<h2> Edit or Delete Rating for <%= @subject.name %>: </h2>
+<form method="POST" action="/subjects/<%= @subject.id %>/ratings/delete">
+            <input id="hidden" type="hidden" name="_method" value="DELETE">
+            <input type='submit' value="Delete Rating">
+</form>
 <form action="/subjects/<%= @subject.id %>/ratings" method='POST'>
     <input type="hidden" id='hidden' name='_method' value="patch">
     <label for='score'>Score: </label><br>
     <% [5, 4, 3, 2, 1].each do |option| %>
         <input type="radio" name="rating[score]" id="score" value="<%= option %>" <%='checked' if @rating.score == option %>> <%= option %> </input> <br>
     <% end %> <br>
-    <label for='review'>Review: </label><br><textarea name="rating[review]" rows="10" cols="50"> <%= @rating.review %> </textarea>
+    <label for='review'>Review: </label><br><textarea name="rating[review]" rows="10" cols="50"> <%= @rating.review %> </textarea><br>
     <input type='submit' id='create' value="Edit Rating">
 </form>

@@ -6,6 +6,8 @@
         <% subject = rating.subject %>
         <li> Subject: <a href="/subjects/<%= subject.id %>"><%= subject.name %></a> (<%= subject.comp_score %>)<br>
         Score: <%= rating.score %> <br>
-        Review: <%= rating.review %> </li><br>
+        Review: <%= rating.review %> <br>
+        <a href="/ratings/subjects/<%= subject.id %>/users/<%= @user.id %>">View Rating</a> <br>
+        </li><br>
     <% end %>
 </ul>

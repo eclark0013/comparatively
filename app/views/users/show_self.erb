@@ -7,6 +7,7 @@
         <li> Subject: <a href="/subjects/<%= subject.id %>"><%= subject.name %></a> (<%= subject.comp_score %>)<br>
         Score: <%= rating.score %> <br>
         Review: <%= rating.review %> </li>
+        <a href="/ratings/subjects/<%= subject.id %>/users/<%= @user.id %>">View Rating</a> <br>
         <a href="/subjects/<%= subject.id %>/ratings/edit">Edit Rating</a> <br>
         <form method="POST" action="/subjects/<%= subject.id %>/ratings/delete">
             <input id="hidden" type="hidden" name="_method" value="DELETE">

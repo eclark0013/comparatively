@@ -6,7 +6,7 @@
 <h2> Ratings </h2>
 <ul>
     <% @subject.ratings.each do |rating| %>
-        <li> Rating from <%= rating.user.username %><br>
+        <li> <a href="/ratings/subjects/<%= @subject.id %>/users/<%= rating.user.id %>">Rating</a> from <%= rating.user.username %><br>
         Score: <%= rating.score %> (compared to <%= rating.user.average_score %> average) <br>
         Review: <%= rating.review %> </li><br>
         </li> 
