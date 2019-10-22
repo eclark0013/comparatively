@@ -56,22 +56,6 @@ class RatingController < ApplicationController
         end
     end
 
-    get '/ratings/subjects/:subject_id/users/:user_id' do
-        @subject = Subject.find(params[:subject_id])
-        @user = User.find(params[:user_id])
-        if !!@subject && !!@user
-            @rating = Rating.find_by(subject_id: @subject.id, user_id: @user.id)
-            if @user == current_user
-                erb :"/ratings/index_self"
-            else
-                erb :"/ratings/index"
-            end
-        else
-            flash[:errors] = {:rating => ["does not exist for that subject and user"]}
-            redirect "/"
-        end
-    end
-
     post '/ratings' do
         @subject = Subject.find_by(name: params[:rating][:subject_name])
         # If new subject input and radio selected, radio selection will override input
@@ -87,10 +71,10 @@ class RatingController < ApplicationController
                     redirect '/ratings/new' 
                 end     
             end  
-        else # if subject does not yet exist (write-in case)
+        else # if subject does not yet exist (write-in case or blank)
             @subject = Subject.new(name: params[:rating][:subject_name], category_id: 1)
             @subject.save
-            if @subject.errors.messages.any?
+            if @subject.errors.messages.any? # blank name
                 flash[:errors] = @subject.errors.messages
                 redirect '/ratings/new' 
             end
@@ -101,10 +85,10 @@ class RatingController < ApplicationController
 
     delete "/subjects/:id/ratings/delete" do
         @rating = Rating.find_by(subject_id: params[:id], user_id: current_user.id) # uses current_user method to protect data 
-        if !!@rating # in case user tried to go to direct url for delete rating for a subject they haven't rated
+        if !!@rating # if rating is not found matching subject and current user, it will not delete
             @rating.delete
+            current_user.update_average_score
         end 
-        current_user.update_average_score
         redirect "/users/#{current_user.id}"
     end
 
