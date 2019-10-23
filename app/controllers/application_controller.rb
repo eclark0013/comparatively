@@ -23,8 +23,7 @@ class ApplicationController < Sinatra::Base
 
     get '/signup' do
         if logged_in?
-            @user = User.find(session[:user_id])
-            redirect "/users/#{@user.id}"
+            redirect "/users/#{session[:user_id]}"
         end
         erb :'/users/create_user'
     end
@@ -108,6 +107,29 @@ class ApplicationController < Sinatra::Base
             @rating.save
             current_user.update_average_score
             flash[:errors] = @rating.errors.messages
+        end
+
+        def redirect_if_not_logged_in(route)
+            if !logged_in?
+                session[:route] = route
+                redirect '/login'
+            end
+        end
+
+        def find_subject(id)
+            @subject = Subject.find_by(id: id)
+            if !@subject
+                flash[:errors] = {:subject => ["not found"]} 
+                redirect "/"
+            end 
+        end
+
+        def find_user(id)
+            @user = User.find_by(id: id)
+            if !@user
+                flash[:errors] = {:user => ["not found"]} 
+                redirect "/"
+            end 
         end
         
     end

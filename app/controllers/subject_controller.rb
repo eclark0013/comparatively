@@ -8,8 +8,7 @@ class SubjectController < ApplicationController
     end
     
     get '/subjects/:id' do
-        @subject = Subject.find(params[:id])
-        # add a link to make a new rating (or edit your rating if you have already rated this)
+        find_subject(params[:id])
         erb :'/subjects/show_subject'
     end
 

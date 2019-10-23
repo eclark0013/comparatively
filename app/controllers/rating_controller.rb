@@ -3,16 +3,12 @@ require './config/environment'
 class RatingController < ApplicationController
 
     get '/subjects/:id/ratings/new' do
-        if !logged_in?
-            session[:route] = "/subjects/#{params[:id]}/ratings/new"
-            erb :'/users/login' 
+        redirect_if_not_logged_in("/subjects/#{params[:id]}/ratings/new")
+        find_subject(params[:id])
+        if current_user.rated_subject(@subject.id) # checks if current user has already rated this subject...
+            redirect "/subjects/#{@subject.id}/ratings/edit" # ... and if they have, it redirects to edit page 
         else
-            @subject = Subject.find(params[:id])
-            if current_user.rated_subject(@subject.id) # checks if current user has already rated this subject...
-                redirect "/subjects/#{@subject.id}/ratings/edit" # ... and if they have, it redirects to edit page 
-            else
-                erb :'/ratings/new_for_subject' # ... otherwise they can make a new rating for that subject
-            end
+            erb :'/ratings/new_for_subject' # ... otherwise they can make a new rating for that subject
         end
     end
 
@@ -25,18 +21,14 @@ class RatingController < ApplicationController
     end
 
     get '/subjects/:id/ratings/edit' do
-        if !logged_in?
-            session[:route] = "/subjects/#{params[:id]}/ratings/edit"
-            erb :'/users/login'
+        redirect_if_not_logged_in("/subjects/#{params[:id]}/ratings/edit")
+        find_subject(params[:id])
+        @user = current_user
+        if current_user.rated_subject(@subject.id)
+            @rating = Rating.find_by(subject_id: @subject.id, user_id: current_user.id)
+            erb :'/ratings/edit' 
         else
-            @subject = Subject.find(params[:id])
-            @user = current_user
-            if current_user.rated_subject(@subject.id)
-                @rating = Rating.find_by(subject_id: @subject.id, user_id: current_user.id)
-                erb :'/ratings/edit' 
-            else
-                redirect "/subjects/#{@subject.id}/ratings/new" 
-            end 
+            redirect "/subjects/#{@subject.id}/ratings/new" 
         end  
     end
 
@@ -47,20 +39,20 @@ class RatingController < ApplicationController
 
 
     get '/ratings/new' do
-        if !logged_in?
-            session[:route] = "/ratings/new"
-            erb :'/users/login' 
-        else
-            @subjects = Subject.all - current_user.subjects
-            erb :'/ratings/new'
-        end
+        redirect_if_not_logged_in("/ratings/new")
+        @subjects = Subject.all - current_user.subjects
+        erb :'/ratings/new'
     end
 
     get '/ratings/subjects/:subject_id/users/:user_id' do
-        @subject = Subject.find(params[:subject_id])
-        @user = User.find(params[:user_id])
+        find_subject(params[:subject_id])
+        find_user(params[:user_id])
         if !!@subject && !!@user
             @rating = Rating.find_by(subject_id: @subject.id, user_id: @user.id)
+            if !@rating
+                flash[:errors] = {:rating => ["not found"]} 
+                redirect "/"
+            end
             if @user == current_user
                 erb :"/ratings/index_self"
             else
